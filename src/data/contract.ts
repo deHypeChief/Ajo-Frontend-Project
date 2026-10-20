@@ -2,7 +2,7 @@ import type { Frequency, Group, Member, Payment } from '@/types'
 
 export type GroupInput = Omit<Group, 'id'>
 export type MemberInput = Omit<Member, 'id' | 'position'>
-export type PaymentInput = Omit<Payment, 'id' | 'paidAt'>
+export type PaymentInput = Omit<Payment, 'id' | 'paidAt'>  // leaves: { cycle, memberId, paid }
 
 export interface DataApi {
   getGroup(): Promise<Group | null>
