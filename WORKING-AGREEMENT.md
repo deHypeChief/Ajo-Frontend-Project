@@ -1,65 +1,55 @@
-# WORKING AGREEMENT.
-**PROJECT** Ajo Circle
-**Partner A (Engine):** <David C>
-**Partner B (Surface):** <Kevin O>
+# Working Agreement
 
-## 1. Branches
-- Nobody pushes to `main`. Every change goes through a pull request.
-- Names: `feat/<area>-<short-name>`, Example: `feat/engine-money`.
+**Partners:** David (Engine) and Kevin (Surface)
+**Repo:** Ajo-Frontend-Project
+**Default branch:** `feat/engine-scaffold` (we use this in place of `main` until the instructor renames it)
 
-## Commit style.
-format: `type: short description`
+This is how we agree to work together. We can change it, but only if both of us agree.
 
-| Type | Use for |
-|---|---|
-| `feat` | a new feature |
-| `fix` | a bug fix |
-| `docs` | documentation |
-| `test` | tests |
-| `refactor` | code changes with no behaviour change |
-| `chore` | tooling, config, dependencies |
-- Small, frequent commits.
-- Never commit `node_modules`, `.env` or build output.
+## 1. Branch names
+- Nobody pushes directly to the default branch. Every change goes on its own branch and through a pull request.
+- Engine work: `engine/<short-topic>`, for example `engine/contract-draft`
+- Surface work: `surface/<short-topic>`, for example `surface/wireframes`
+- Shared work (README, docs for both of us): `docs/<short-topic>`
+- Use lowercase and hyphens. Keep one topic per branch, and delete the branch after it is merged.
 
-## 3. Pull requests and reviews
+## 2. Commit style
+Start each commit message with a type, a colon, and a short description in the present tense:
 
-- Every PR needs the other partner's approval before it merges.
-- The reviewer leaves at least two substantive comments. "Looks good" on its own does not count.
-- The PR description says what changed, why, and how to check it.
-- Review turnaround: within **24 hours**. If you can't, say so in the PR.
-- The author merges after approval. Use squash merge only if the PR shows who did what.
-- A change to `docs/CONTRACT.md` needs both partners to agree. A breaking change says so in the PR title.
+| Type | Use it for |
+|------|-----------|
+| `feat:` | a new feature or screen |
+| `fix:` | a bug fix |
+| `docs:` | documentation, wireframes, logs |
+| `chore:` | setup, tooling, config |
+| `refactor:` | restructuring code without changing behavior |
+| `test:` | adding or changing tests |
 
-## 4. Code ownership
+Example: `docs: add wireframes for five screens`
 
-| | Partner A (Engine) | Partner B (Surface) |
-|---|---|---|
-| Owns | `src/data`, `src/stores`, `src/utils`, `src/types` | `src/components`, `src/views`, styles |
-| Rule | Components never import from `src/data`. They use the stores only. | |
+- Make small commits. One idea per commit.
+- No commit messages like "update" or "changes".
+- Never commit `node_modules`.
 
-Roles swap in Week 5.
+## 3. Pull requests and review turnaround
+- Every change merges through a pull request, and the other partner must approve it before it merges.
+- Nobody approves or merges their own PR.
+- Reviewers leave at least two specific comments (a question, a suggestion, or something missing). A bare "LGTM" doesn't count.
+- **Review turnaround: within 24 hours** of the PR being opened.
+- If a PR has had no review after 24 hours, the author messages the partner. If there is still no response after 48 hours, we tell the instructor.
+- A PR that changes `docs/CONTRACT.md` needs both of us to agree, and a breaking change (renaming or removing a field or function) says so in the PR title.
+- Keep PRs small enough to review in about 15 minutes.
 
-## 5. Meetings
+## 4. Meetings
+- Two pair sessions a week, 45 minutes each. One drives, one navigates, and we swap halfway.
+- Session 1: <day, time, call or in person>
+- Session 2: <day, time, call or in person>
+- After each session, we add an entry to `docs/PAIR-LOG.md`.
 
-- Two pair sessions per week, 45 minutes each. One drives, one navigates, and we swap halfway.
-  - Session 1: <day>, <time>
-  - Session 2: <day>, <time>
-- Where: < In person>
-- After each session, log decisions and open questions in `docs/PAIR-LOG.md`.
+## 5. Logs
+- Every chunk of AI-assisted code or writing gets an entry in `docs/AI-LOG.md`, including what was wrong with it.
+- Each milestone, we each file one reproducible bug against the other's work.
+- Each milestone, we write one short decision record in `docs/adr/`.
 
-
-## 6. Communication
-
-- Main channel: <WhatsApp >
-- Reply within <24> hours on weekdays.
-
-## 7. Logs
-
-- `docs/AI-LOG.md`: every AI-assisted chunk gets an entry (prompt, what we kept, what we changed, what was wrong).
-- `docs/PAIR-LOG.md`: every pair session.
-- `docs/adr/`: one decision record per milestone.
-- Each milestone, each partner files one reproducible bug against the other's work.
-
-## 8. Contract
--Changing `docs/CONTRACT.md` or `src/types/` needs both partners to agree.
--A breaking change says so in the pull request title.
+## 6. If one of us is stuck or unavailable
+We message first, then call. If we are still blocked after 48 hours, we ask the instructor.
