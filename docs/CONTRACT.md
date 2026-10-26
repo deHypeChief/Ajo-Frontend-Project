@@ -1,4 +1,4 @@
-# Contract (needs Kevin's review)
+# Contract
 
 Both partners own this file. Changing a type or a function needs both partners to agree.
 Code Source of truth: ``src/types/index.ts` and `src/data/contract.ts`.
