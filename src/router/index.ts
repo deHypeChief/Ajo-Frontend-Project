@@ -1,3 +1,4 @@
+   import KitView from '../views/KitView.vue'
    import { createRouter, createWebHistory } from 'vue-router'
    import DashboardView from '@/views/DashboardView.vue'
    import SetupView from '@/views/SetupView.vue'
@@ -11,9 +12,11 @@
      routes: [
        { path: '/', name: 'dashboard', component: DashboardView },
        { path: '/members', name: 'members', component: MembersView },
+       { path: '/kit', component: KitView },
        { path: '/cycle', name: 'cycle', component: CycleView },
        { path: '/setup', name: 'setup', component: SetupView },
        { path: '/settings', name: 'settings', component: SettingsView }
+       
        // your other four go here: /setup, /members, /cycle, /settings
      ],
    })
