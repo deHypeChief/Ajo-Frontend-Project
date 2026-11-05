@@ -208,3 +208,32 @@ npm install
 npm run dev
 ```
 Then open the local address it prints (usually http://localhost:5173).
+
+## Data Layer
+
+The app has no server. Everything is saved in your browser's localStorage,
+under keys that start with `ajo:`  (`ajo:members`, `ajo:group`, `ajo:payments`, `ajo:seeded`).
+
+Every data function returns a Promise, waits a random 300 to 900 ms, and
+rejects about 1 call in 10 with a `DataError` (code `NETWORK`). A rejected
+call never writes anything, so retrying is always safe.
+
+## Resetting the data
+
+To get back to the six starter members:
+
+1. Open the app in the browser and press F12 to open the Console.
+
+2. Paste this line and press Enter:
+
+  Object.keys(localStorage).filter(k => k.startsWith('ajo:')).forEach(k => localStorage.removeItem(k))
+
+3. Reload the page. The six seed members are loaded again.
+
+## Controlling the failure switch
+
+For testing the error screen, `setFailureMode()` in `src/data/client.ts` accepts:
+
+- `'random'`: about 1 in 10 calls fail (the default)
+- `'always'`: every call fails
+- `'off'`: no call fails
