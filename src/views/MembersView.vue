@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import AppButton from '@/components/AppButton.vue'
+import AppInput from '@/components/AppInput.vue'
+import AppModal from '@/components/AppModal.vue'
+import { useToast } from '@/composables/useToast'
 import { useMembersStore } from '@/stores/member'
 import type { StoreError } from '@/stores/member'
 
 const members = useMembersStore()
+const toast = useToast()
 
 onMounted(() => {
   members.load()
@@ -27,11 +31,53 @@ function formatPhone(phone: string): string {
     ? `${phone.slice(0, 4)} ${phone.slice(4, 7)} ${phone.slice(7)}`
     : phone
 }
+
+// ---- Add member ----
+const modalOpen = ref(false)
+const name = ref('')
+const phone = ref('')
+const nameError = ref('')
+const phoneError = ref('')
+
+const addErrorMessages: Record<StoreError, string> = {
+  NETWORK: "We couldn't save that member. Please try again.",
+  VALIDATION: "Please check the member's details and try again.",
+  NOT_FOUND: "We couldn't save that member. Please try again.",
+  UNKNOWN: 'Something went wrong. Please try again.',
+}
+
+function openModal() {
+  name.value = ''
+  phone.value = ''
+  nameError.value = ''
+  phoneError.value = ''
+  modalOpen.value = true
+}
+
+async function submit() {
+  nameError.value = name.value.trim() ? '' : "Enter the member's name."
+  phoneError.value = /^\d{11}$/.test(phone.value.trim()) ? '' : 'Enter an 11-digit phone number.'
+  if (nameError.value || phoneError.value) return
+
+  const saved = await members.add({ name: name.value.trim(), phone: phone.value.trim() })
+  if (saved) {
+    modalOpen.value = false
+    toast.success('Member added.')
+  } else {
+    // The modal stays open so the person can try again without retyping.
+    toast.error(addErrorMessages[members.addError ?? 'UNKNOWN'])
+  }
+}
 </script>
 
 <template>
   <section class="members" aria-labelledby="members-title">
-    <h1 id="members-title" class="members__title">Members</h1>
+    <div class="members__header">
+      <h1 id="members-title" class="members__title">Members</h1>
+      <AppButton v-if="members.status === 'ready' && !members.isEmpty" @click="openModal">
+        Add member
+      </AppButton>
+    </div>
 
     <!-- 1. Loading: skeleton -->
     <div v-if="isLoading" class="skeleton" role="status" aria-live="polite">
@@ -58,6 +104,7 @@ function formatPhone(phone: string): string {
       <span class="state__icon" aria-hidden="true">+</span>
       <h2 class="state__title">No members yet</h2>
       <p class="state__text">Add your first member.</p>
+      <AppButton @click="openModal">Add member</AppButton>
     </div>
 
     <!-- 4. Full list -->
@@ -70,6 +117,35 @@ function formatPhone(phone: string): string {
         </span>
       </li>
     </ul>
+
+    <AppModal v-model="modalOpen" title="Add member">
+      <form id="add-member-form" class="add-form" novalidate @submit.prevent="submit">
+        <AppInput
+          v-model="name"
+          label="Member name"
+          placeholder="e.g. Chidi Eze"
+          :error="nameError"
+          required
+        />
+        <AppInput
+          v-model="phone"
+          label="Phone number"
+          type="tel"
+          placeholder="08031234567"
+          hint="11 digits, numbers only."
+          :error="phoneError"
+          required
+        />
+      </form>
+      <template #footer>
+        <AppButton variant="secondary" :disabled="members.adding" @click="modalOpen = false">
+          Cancel
+        </AppButton>
+        <AppButton type="submit" form="add-member-form" :loading="members.adding">
+          Add member
+        </AppButton>
+      </template>
+    </AppModal>
   </section>
 </template>
 
@@ -80,8 +156,22 @@ function formatPhone(phone: string): string {
   gap: var(--space-5);
 }
 
+.members__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
 .members__title {
   font-size: var(--text-xl);
+}
+
+.add-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
 /* Full list */
