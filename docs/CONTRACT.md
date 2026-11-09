@@ -1,7 +1,7 @@
-# Contract (needs Kevin's review)
+# Contract
 
 Both partners own this file. Changing a type or a function needs both partners to agree.
-Code Source of truth: ``src/types/index.ts` and `src/data/contract.ts`.
+Code Source of truth:  `src/data/contract.ts`.
 
 ## Rules
 - Money is `Kobo`: whole numbers only. ₦1,500.50 is `150050`.
@@ -18,13 +18,13 @@ Code Source of truth: ``src/types/index.ts` and `src/data/contract.ts`.
 | Member | position | number | data layer | engine, Members page | 1-based payout slot, unique within the group |
 | Group | id | string | data layer | everyone | Assigned by `saveGroup` |
 | Group | name | string | Surface | Dashboard, Settings | Typed in the setup wizard |
-| Group | amount | kobo | surface | engine, Dashboard | Contribution per member per cycle |
-| Group | stratsOn | string | Surface | engine | ISO date `YYYY-MM-DD`; due date of cycle 1  |
+| Group | amount | Kobo | surface | engine, Dashboard | Contribution per member per cycle |
+| Group | startsOn | string | Surface | engine | ISO date `YYYY-MM-DD`; due date of cycle 1  |
 | Group | every | Frequency | surface | engine | `'week'`, `'fortnight'` or `'month'` |
 | Cycle | n | number | engine | everyone |  1-based cycle number  |
 | Cycle | recipientId | string | engine | Cycle page, Payout | The `Member.id` who collects this cycle  |
-| Cycle | CycleStaus | Type | engine | Cycle page, Dashboard | See ADR 001: nothing in the six functions writes it yet  |
-| Payment| id | string | Sufrace | ledger | Assigned by `recordPayment` |
+| Cycle | CycleStaus | Status | engine | Cycle page, Dashboard | See ADR 001: nothing in the six functions writes it yet  |
+| Payment| id | string | Data layer | ledger | Assigned by `recordPayment` |
 | Payment| cycle | number | Surface | ledger,engine | The `Cycle.n` this payment belongs to |
 | Payment| memberId | string | Surface | ledger,engine | The `Member.id` who paid |
 | Payment| paid | Kobo | Surface | engine,ledger | Kobo actually paid. |
@@ -34,8 +34,19 @@ Code Source of truth: ``src/types/index.ts` and `src/data/contract.ts`.
 | Function | Returns | Reads / writes |
 |---|---|---|
 | `getGroup()` | `Group \| null` | reads group |
-| `createGroup(group)` | `Group` | writes group |
+| `saveGroup(input)` | `Group` | writes group |
 | `listMembers()` | `Member[]` | reads members |
 | `addMember(input)` | `Member` | writes members |
 | `listPayments(cycle?)` | `Payment[]` | reads payments |
 | `recordPayment(input)` | `Payment` | writes payments |
+
+## Input types
+| Type | Fields | Meaning |
+|---|---|---|
+| `GroupInput` | name, amount, startsOn, every | A Group without its `id` |
+| `MemberInput` | name, phone | A Member without `id` and `position` (the data layer assigns both) |
+| `PaymentInput` | cycle, memberId, paid | A Payment without `id` and `paidAt` |
+
+## Errors
+Every rejection is a `DataError` with a `code`:
+`'NETWORK'`, `'VALIDATION'` or `'NOT_FOUND'`.

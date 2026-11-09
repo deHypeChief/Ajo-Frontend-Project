@@ -2,7 +2,7 @@ import type { Frequency, Group, Member, Payment } from '@/types'
 
 export type GroupInput = Omit<Group, 'id'>
 export type MemberInput = Omit<Member, 'id' | 'position'>
-export type PaymentInput = Omit<Payment, 'id' | 'paidAt'>
+export type PaymentInput = Omit<Payment, 'id' | 'paidAt'>  // leaves: { cycle, memberId, paid }
 
 export interface DataApi {
   getGroup(): Promise<Group | null>
@@ -13,9 +13,14 @@ export interface DataApi {
   recordPayment(input: PaymentInput):Promise<Payment>
 }
 
+
+export type DataErrorCode = 'NETWORK' | 'VALIDATION' | 'NOT_FOUND'
+
 export class DataError extends Error {
-  readonly code: 'NETWORK' | 'VALIDATION' | 'NOT_FOUND'
-  constructor(code:code, message:string) {
+  readonly code: DataErrorCode
+  constructor(code:DataErrorCode, message:string) {
     super(message)
+    this.name = 'DataError'
     this.code = code
   }
+}
