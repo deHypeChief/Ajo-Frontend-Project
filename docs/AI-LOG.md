@@ -44,7 +44,7 @@
 # Kevin's AI log (Surface)
 
 ## K1. Design tokens, components, layout shell and /kit page (PR #7)
-- **Asked:** for assistance with the design tokens as CSS variables, five components (AppButton, AppInput, AppCard, AppModal, AppToast), a layout shell and a `/kit` page.
+- **Asked:** for assistance with the design tokens as CSS variables, five components (AppButton, AppInput, AppCard, AppModal, AppToast), a layout shell and a `/kit` page .
 - **AI gave:** the token file, the components, `useToast`, `ToastHost`, `AppShell`, `KitView.vue` and a new `App.vue`.
 - **I did:** put the files into my branch, imported the two style files in `main.ts`, added the `/kit` route to the router, and opened PR #7, which was merged.
 
